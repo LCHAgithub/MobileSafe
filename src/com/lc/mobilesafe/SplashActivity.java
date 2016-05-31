@@ -20,6 +20,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -30,8 +31,11 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -83,12 +87,23 @@ public class SplashActivity extends Activity {
 		tv_splash_version.setText("版本号:" + getVersion());
 		tv_splash_update = (TextView) findViewById(R.id.tv_splash_update);
 		checkVersion();
+		AlphaAnimation aa = new AlphaAnimation(0.1f, 1.0f);
+		aa.setDuration(3000);
+		findViewById(R.id.rl_splash_root).startAnimation(aa);
 	}
 	
 	protected void showUpdate() {
 		AlertDialog.Builder builder = new Builder(this);
 		builder.setTitle("要升级吗");
 		builder.setMessage(description);
+		//取消监听
+		builder.setOnCancelListener(new OnCancelListener() {
+			@Override
+			public void onCancel(DialogInterface dialog) {
+				dialog.dismiss();
+				enterHome();
+			}
+		});
 		builder.setNegativeButton("下次再说", new OnClickListener() {
 			
 			@Override
@@ -112,7 +127,7 @@ public class SplashActivity extends Activity {
 								String strMsg) {
 							super.onFailure(t, errorNo, strMsg);
 							t.printStackTrace();
-							Toast.makeText(getApplicationContext(), "下载失败", Toast.LENGTH_SHORT).show();
+							Toast.makeText(SplashActivity.this, "下载失败", Toast.LENGTH_SHORT).show();
 						}
 
 						@Override
@@ -126,14 +141,13 @@ public class SplashActivity extends Activity {
 						@Override
 						public void onSuccess(File t) {
 							super.onSuccess(t);
-							Toast.makeText(getApplicationContext(), "下载成功", Toast.LENGTH_SHORT).show();
+							Toast.makeText(SplashActivity.this, "下载成功", Toast.LENGTH_SHORT).show();
 							//安装应用
 							Intent intent = new Intent();
 							intent.setAction("android.intent.action.VIEW");
 							intent.setDataAndType(Uri.fromFile(t), "application/vnd.android.package-archive");
 							startActivity(intent);
 						}
-						
 					});
 				}
 			}
@@ -156,11 +170,9 @@ public class SplashActivity extends Activity {
 	 */
 	private void checkVersion() {
 		new Thread() {
-			
-
-
 			public void run() {
 				Message msg = Message.obtain();
+				long startTime = System.currentTimeMillis();
 				try {
 					URL url = new URL(getString(R.string.serverurl));
 					HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -197,6 +209,11 @@ public class SplashActivity extends Activity {
 					e.printStackTrace();
 					msg.what = JSON_ERROR;
 				}finally{
+					long endTime = System.currentTimeMillis();
+					long dTime = endTime - startTime;
+					if (dTime < 2000) {
+						SystemClock.sleep(2000 - dTime);
+					}
 					handler.sendMessage(msg);
 				}
 			};
