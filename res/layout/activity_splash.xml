@@ -25,5 +25,12 @@
 	   	android:layout_above="@id/tv_splash_version"
 	   	android:layout_centerHorizontal="true"
 	    />
-
+	<TextView 
+	    android:visibility="gone"
+	    android:id="@+id/tv_splash_update"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:textSize="15sp"
+	    android:layout_alignParentBottom="true"
+	    />
 </RelativeLayout>
