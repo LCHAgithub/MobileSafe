@@ -13,7 +13,7 @@ import net.tsz.afinal.http.AjaxCallBack;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.lc.mobilesafe.activity.HomeActivity;
+import com.lc.mobilesafe.activity.MainActivity;
 import com.lc.mobilesafe.utils.StreamTools;
 
 import android.app.Activity;
@@ -170,7 +170,7 @@ public class SplashActivity extends Activity {
  * 进入主页面
  */
 	protected void enterHome() {
-		Intent intent = new Intent(this, HomeActivity.class);
+		Intent intent = new Intent(this, MainActivity.class);
 		startActivity(intent);
 		finish();
 	}

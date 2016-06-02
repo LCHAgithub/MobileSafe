@@ -25,7 +25,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.lc.mobilesafe.activity.HomeActivity" />
+        <activity android:name="com.lc.mobilesafe.activity.MainActivity" />
         <activity android:name="com.lc.mobilesafe.activity.SettingActivity"/>
     </application>
 
