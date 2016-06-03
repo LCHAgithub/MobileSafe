@@ -16,6 +16,7 @@ import org.json.JSONObject;
 import com.lc.mobilesafe.activity.MainActivity;
 import com.lc.mobilesafe.utils.StreamTools;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -36,7 +37,6 @@ import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,6 +53,7 @@ public class SplashActivity extends Activity {
 	private String apkurl;
 	private String description;
 	private SharedPreferences sp;
+	@SuppressLint("HandlerLeak")
 	Handler handler = new Handler(){
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
