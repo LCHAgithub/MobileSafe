@@ -1,6 +1,7 @@
 package com.lc.mobilesafe;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -16,6 +17,7 @@ import org.json.JSONObject;
 import com.lc.mobilesafe.activity.MainActivity;
 import com.lc.mobilesafe.utils.StreamTools;
 
+import android.R.integer;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -90,6 +92,8 @@ public class SplashActivity extends Activity {
 		tv_splash_version.setText("版本号:" + getVersion());
 		tv_splash_update = (TextView) findViewById(R.id.tv_splash_update);
 		
+		copyDB();
+		
 		if (sp.getBoolean("update", false)) {
 			checkVersion();
 		}else {
@@ -105,6 +109,27 @@ public class SplashActivity extends Activity {
 		findViewById(R.id.rl_splash_root).startAnimation(aa);
 	}
 	
+	private void copyDB() {
+		File file = new File(getFilesDir(), "address.db");
+		if (file.exists() && file.length()>0) {
+			System.out.println("--------数据库已存在------");
+		}else {
+			try {
+				InputStream is = getAssets().open("address.db");
+				FileOutputStream fos = new FileOutputStream(file);
+				int len = 0;
+				byte buffer[] = new byte[1024];
+				while ((len = is.read(buffer)) != -1) {
+					fos.write(buffer, 0, len);
+				}
+				is.close();
+				fos.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 	protected void showUpdate() {
 		AlertDialog.Builder builder = new Builder(this);
 		builder.setTitle("要升级吗");
